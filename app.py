@@ -36,6 +36,19 @@ def preprocess_image(image, target_size):
 def home():
     return render_template("home.html")
 
+@app.route('/test',methods=['POST'])
+def predict():
+    message = request.get_json(force=True)
+    encoded = message['image']
+    decoded = base64.b64decode(encoded)
+    image = Image.open(io.BytesIO(decoded))
+    image = image.rotate(45)
+    width, height = image.size
+    cropped_image = image.crop((0, 0, width/2, height/2))
+    image = image.resize((width*2, height*2))
+    image.save("image.jpg")
+    return jsonify({'a':'b'})
+
 @app.route('/predict',methods=['POST'])
 def predict():
     message = request.get_json(force=True)
